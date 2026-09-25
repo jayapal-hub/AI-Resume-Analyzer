@@ -5,10 +5,12 @@ from src.resume_analyzer.analyzer import analyze_resume
 from src.resume_analyzer.skills import extract_skills
 from src.resume_analyzer.scorer import calculate_score
 from src.resume_analyzer.suggestions import generate_suggestions
+
 from src.resume_analyzer.job_matcher import (
     extract_job_skills,
     compare_skills,
-    calculate_job_match_score
+    calculate_job_match_score,
+    categorize_missing_skills
 )
 
 
@@ -89,18 +91,22 @@ if uploaded_file is not None:
             skills,
             job_skills
         )
-        job_match_score = calculate_job_match_score(
-    matched_skills,
-    job_skills
-    )
 
+        job_match_score = calculate_job_match_score(
+            matched_skills,
+            job_skills
+        )
+
+        missing_skill_categories = categorize_missing_skills(
+            missing_skills
+        )
 
         st.subheader("🎯 Job Match Analysis")
-        st.metric(
-    "Job Match Score",
-    f"{job_match_score}%"
-    )
 
+        st.metric(
+            "Job Match Score",
+            f"{job_match_score}%"
+        )
 
         st.write("Matched Skills:")
 
@@ -115,6 +121,17 @@ if uploaded_file is not None:
             st.warning(", ".join(missing_skills))
         else:
             st.success("No missing skills!")
+
+        # Skill Gap Analysis
+        st.subheader("🎯 Skill Gap Analysis")
+
+        for category, skills_list in missing_skill_categories.items():
+
+            if skills_list:
+
+                st.write(f"**{category}**")
+
+                st.warning(", ".join(skills_list))
 
     # Calculate score
     score, breakdown = calculate_score(

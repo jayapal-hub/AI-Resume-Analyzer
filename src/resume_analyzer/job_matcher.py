@@ -62,3 +62,33 @@ def calculate_job_match_score(matched_skills, job_skills):
     score = (len(matched_skills) / len(job_skills)) * 100
 
     return round(score)
+
+
+def categorize_missing_skills(missing_skills):
+
+    categories = {
+        "Programming": [],
+        "Database": [],
+        "Backend": [],
+        "DevOps & Cloud": [],
+        "Frontend": []
+    }
+
+    for skill in missing_skills:
+
+        if skill in ["python", "c++", "java"]:
+            categories["Programming"].append(skill)
+
+        elif skill in ["sql", "mysql", "postgresql"]:
+            categories["Database"].append(skill)
+
+        elif skill in ["rest api", "django", "flask"]:
+            categories["Backend"].append(skill)
+
+        elif skill in ["docker", "aws"]:
+            categories["DevOps & Cloud"].append(skill)
+
+        elif skill in ["html", "css", "javascript", "react", "node.js"]:
+            categories["Frontend"].append(skill)
+
+    return categories
